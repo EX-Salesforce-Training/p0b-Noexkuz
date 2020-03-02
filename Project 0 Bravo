@@ -1,0 +1,95 @@
+/////////////////////////////////////////////////////////////////
+//
+// Name: Project 0 Bravo
+// Author: Sean Okunseri (seanokunseri@gmail.com)
+// Date: 03/01/2020
+// Description: Series of apex methods to demonstrate
+// basic understanding of coding concepts.
+//
+/////////////////////////////////////////////////////////////////
+
+public class P0B {
+    
+    public static Integer nFibonacci( Integer n ){
+        if (n <= 0){
+            return 0;
+        } else if (n == 1 || n == 2){
+            return 1;
+        } else {
+            Integer fib = nFibonacci(n-1) + nFibonacci(n-2);
+            return fib;
+        }
+    }
+   
+    public static Integer[] sortArray( Integer[] intList ) {
+        integer iterationSize = intList.size();
+        for(integer i = 0; i < intList.size(); i++){
+             
+            for(integer n = 0; n < iterationSize; n++){
+                if(n + 1 == intList.size()){
+                    break;
+                }
+                if(intList.get(n) > intList.get(n + 1)){
+                    integer  swapVal = intList.get(n); 
+                    intList.set(n,intList.get(n+1));
+                    intList.set(n+1,swapVal);
+                }
+            }
+        }
+        return intList;
+    }
+    
+    public static Integer nFactorial( Integer n) {
+        if(n == 0){
+            return 1;
+        } else {
+           	integer factorial = n*nFactorial( n - 1);
+            return factorial;
+        }
+   }
+    
+    public static Integer[] rotateLeftNTimes(Integer[] arrList, Integer n) {
+        for(integer i = 0; i < n*arrList.size(); i++){
+            if(i + 1 == arrList.size()){
+                    break;
+            } else {
+            	integer  swapVal = arrList.get(i); 
+                arrList.set(i,arrList.get(i+1));
+                arrList.set(i+1,swapVal);
+            }
+          }
+          return arrList;
+       }
+    
+    public static Boolean bracketsAreBalanced( String s ) {
+        
+        String[] bracketArray = s.split('');
+        integer low = 0;
+        integer high = bracketArray.size() -1;
+        integer mid = (low + high) / 2;
+            
+        if(math.mod(bracketArray.size(), 2) != 0){
+            return false;
+        }
+        for(integer i = 0; i < bracketArray.size(); i++){
+
+            if (bracketArray.get(i).equals('(') && !bracketArray.get((bracketArray.size()-1) - i).equals(')') ||
+                bracketArray.get(i).equals('{') && !bracketArray.get((bracketArray.size()-1) - i).equals('}') ||
+                bracketArray.get(i).equals('[') && !bracketArray.get((bracketArray.size()-1) - i).equals(']')) {
+              	return false;
+            }
+        }
+        
+        if(bracketArray.get(mid).equals('(') && !bracketArray.get(mid + 1).equals(')') ||
+           bracketArray.get(mid).equals('{') && !bracketArray.get(mid + 1).equals('}') ||
+           bracketArray.get(mid).equals('[') && !bracketArray.get(mid + 1).equals(']')){
+           return false;
+        }
+        if(bracketArray.get(0).equals('(') && bracketArray.get(bracketArray.size() - 1).equals(')') ||
+           bracketArray.get(0).equals('{') && bracketArray.get(bracketArray.size() - 1).equals('}') ||
+           bracketArray.get(0).equals('[') && bracketArray.get(bracketArray.size() - 1).equals(']')){
+           return true;
+        }
+        return false;
+    } 
+}
