@@ -49,9 +49,10 @@ public class P0B {
    }
     
     public static Integer[] rotateLeftNTimes(Integer[] arrList, Integer n) {
-        for(integer i = 0; i < n*arrList.size(); i++){
+        for(integer i = 0; i < n; i++){
             if(i + 1 == arrList.size()){
-                    break;
+                i=0;
+                n= n - arrList.size();
             } else {
             	integer  swapVal = arrList.get(i); 
                 arrList.set(i,arrList.get(i+1));
@@ -63,33 +64,85 @@ public class P0B {
     
     public static Boolean bracketsAreBalanced( String s ) {
         
-        String[] bracketArray = s.split('');
-        integer low = 0;
-        integer high = bracketArray.size() -1;
-        integer mid = (low + high) / 2;
-            
-        if(math.mod(bracketArray.size(), 2) != 0){
-            return false;
-        }
-        for(integer i = 0; i < bracketArray.size(); i++){
+        List<String> stringList = new List<String>();
+        stringList = s.split('');
 
-            if (bracketArray.get(i).equals('(') && !bracketArray.get((bracketArray.size()-1) - i).equals(')') ||
-                bracketArray.get(i).equals('{') && !bracketArray.get((bracketArray.size()-1) - i).equals('}') ||
-                bracketArray.get(i).equals('[') && !bracketArray.get((bracketArray.size()-1) - i).equals(']')) {
+        for(integer i = 0; i < stringList.size(); i++){
+            if(stringList.get(i) == ' '){
+                stringList.remove(i);
+            }   
+        }
+         for(integer j = 0; j < stringList.size(); j++){
+
+            if (stringList.get(j).equals('(') && !stringList.get((stringList.size()-1) - j).equals(')') ||
+                stringList.get(j).equals('{') && !stringList.get((stringList.size()-1) - j).equals('}') ||
+                stringList.get(j).equals('[') && !stringList.get((stringList.size()-1) - j).equals(']')) {
               	return false;
-            }
-        }
-        
-        if(bracketArray.get(mid).equals('(') && !bracketArray.get(mid + 1).equals(')') ||
-           bracketArray.get(mid).equals('{') && !bracketArray.get(mid + 1).equals('}') ||
-           bracketArray.get(mid).equals('[') && !bracketArray.get(mid + 1).equals(']')){
-           return false;
-        }
-        if(bracketArray.get(0).equals('(') && bracketArray.get(bracketArray.size() - 1).equals(')') ||
-           bracketArray.get(0).equals('{') && bracketArray.get(bracketArray.size() - 1).equals('}') ||
-           bracketArray.get(0).equals('[') && bracketArray.get(bracketArray.size() - 1).equals(']')){
-           return true;
-        }
+                } else {
+                    return true;
+                }
+        }        
         return false;
     } 
+
+
+    
+    public static void updateAccountSize() {
+        
+        List<Account> accUpdate = new List<Account>();
+        List<Account> acc = new List<Account>();
+        acc = [SELECT Size__c, NumberOfEmployees 
+               FROM Account];
+        
+        for(Account i: acc){
+            if(i.NumberOfEmployees >= 1 && i.NumberOfEmployees <= 1000){
+                i.Size__c = 'small';
+                accUpdate.add(i);
+            }
+        	if(i.NumberOfEmployees >= 1001 && i.NumberOfEmployees <= 10000){
+                i.Size__c = 'medium';
+                accUpdate.add(i);
+            }
+            if(i.NumberOfEmployees > 10000){
+                i.Size__c = 'large';
+                accUpdate.add(i);
+            }
+        }
+	
+        update accUpdate;
+    
+    }
+    
+    public static void updateCALeads() {
+        
+        List<Lead> leadUpdate = new List<Lead>();
+        List<Lead> leadList = new List<Lead>();
+        leadList = [SELECT State, Status, Description 
+                    FROM Lead 
+                    WHERE State = 'CA'];
+        
+        for(Lead i: leadList){
+            i.Description = 'We are no longer doing business in California.';
+            i.Status = 'Closed - Not Converted';
+            leadUpdate.add(i);
+        } 
+		update leadUpdate;
+    }
+    
+    public static void closePastDueOpportunities() {
+        
+        List<Opportunity> oppUpdate = new List<Opportunity>();
+        List<Opportunity> oppList = new List<Opportunity>();
+        oppList = [SELECT CloseDate, StageName 
+                   FROM Opportunity 
+                   WHERE CloseDate < TODAY 
+                   AND StageName != 'Closed Won'];
+        
+        for(Opportunity i: oppList){
+            i.StageName = 'Closed Lost';
+            oppUpdate.add(i);
+        }
+        update oppUpdate;
+    }
+
 }
